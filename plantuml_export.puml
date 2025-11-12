@@ -1,0 +1,84 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+  name: String
+  email: String
+  password: String
+  verifiedToken: String
+  emailVerified: boolean
+  bookingList: List<Booking>
+}
+
+class Booking {
+  user: User
+  show: Show
+  seats: List<ShowSeat>
+  amount: double
+  payment: Payment
+}
+
+class Movie {
+  title: String
+  duration: int
+  language: String
+  genre: String
+  releaseDate: Date
+}
+
+class Show {
+  movie: Movie
+  screen: Screen
+  showSeats: List<ShowSeat>
+  startTime: DateTime
+  endTime: DateTime
+}
+
+class Theatre {
+  name: String
+  region: Region
+  screens: List<Screen>
+}
+
+class Screen {
+  name: String
+  seats: List<Seat>
+  theatre: Theatre
+}
+
+class Seat {
+  seatNumber: String
+  seatType: SeatType
+  screen: Screen
+}
+
+class Payment {
+  amount: double
+  provider: PaymentProvider
+  status: PaymentStatus
+  booking: Booking
+}
+
+@enduml
+
+@startuml
+skinparam classAttributeIconSize 0
+
+class User
+class Booking
+class Movie
+class Show
+class Theatre
+class Screen
+class Seat
+class Payment
+
+User "1" --> "*" Booking : books >
+Booking "1" --> "1" Show
+Booking "1" --> "1" Payment
+Show "*" --> "1" Movie
+Show "*" --> "1" Screen
+Screen "1" --> "*" Seat
+Theatre "1" --> "*" Screen
+
+@enduml
