@@ -36,6 +36,7 @@ public class UserService {
         this.mailSender = mailSender;
     }
 
+    @Transactional
     public User signUp(String name, String email, String password){
         /*
         1. Check if a user with email already exists
@@ -65,6 +66,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public User logIn(String email, String password){
         Optional<User> userOptional = userRepository.findByEmail(email);
         if(userOptional.isEmpty())
@@ -166,43 +168,5 @@ public class UserService {
         userDto.setId(user.getId());
         userDto.setEmail(user.getEmail());
         return userDto;
-    }
-
-    public User adminSignUp(String name, String email, String passowrd){
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if(userOptional.isPresent()){
-            throw new UserAlreadyExistsException(email);
-        }
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(bCryptPasswordEncoder.encode(passowrd));
-        user.setProvider(AuthProvider.LOCAL);
-        user.setRole(Set.of(Role.ADMIN));
-        user.setEmailVerified(true);
-        user.setVerifiedToken(null);
-
-        // generate token
-        String token = UUID.randomUUID().toString();
-        user.setVerifiedToken(token);
-
-        return userRepository.save(user);
-    }
-
-    public User adminLogIn(String email, String password){
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if(userOptional.isEmpty()){
-                throw new EmailNotFoundException(email);
-        }
-
-        if(!email.equals("kishorekumar4a@gmail.com")){
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        if(!bCryptPasswordEncoder.matches(password, userOptional.get().getPassword())){
-            throw new InvalidPasswordException();
-        }
-
-        return userOptional.get();
     }
 }
