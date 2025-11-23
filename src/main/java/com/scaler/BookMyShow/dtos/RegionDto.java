@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegionDto {
+public class RegionResponseDto {
     private Long id;
     private String name;
 }
